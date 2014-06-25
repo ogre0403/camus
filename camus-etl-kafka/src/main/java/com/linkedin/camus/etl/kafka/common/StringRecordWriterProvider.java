@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  */
 public class StringRecordWriterProvider implements RecordWriterProvider {
     public static final String ETL_OUTPUT_RECORD_DELIMITER = "etl.output.record.delimiter";
-    public static final String DEFAULT_RECORD_DELIMITER    = "";
+    public static final String DEFAULT_RECORD_DELIMITER    = System.getProperty("line.separator");
 
     protected String recordDelimiter = null;
 

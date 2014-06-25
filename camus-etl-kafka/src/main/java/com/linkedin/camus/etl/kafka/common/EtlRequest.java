@@ -33,7 +33,7 @@ public class EtlRequest implements Writable {
 	
 	private static Logger log = Logger.getLogger(EtlRequest.class);
     private JobContext context = null;
-    private static final long DEFAULT_OFFSET = 0;
+    private static final long DEFAULT_OFFSET = -1;
 
     private String topic = "";
     private String leaderId = "";

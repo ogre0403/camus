@@ -325,37 +325,37 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper> {
 			if (key != null) {
 				request.setOffset(key.getOffset());
 			}
-
-			if (request.getEarliestOffset() > request.getOffset()
-					|| request.getOffset() > request.getLastOffset()) {
-				if(request.getEarliestOffset() > request.getOffset())
-				{
+			
+			log.debug("Request befroe adjust :" + request);
+			if (request.getEarliestOffset() > request.getOffset()){
+				if(request.getOffset()!= -1 && request.getEarliestOffset() != 0){
 					log.error("The earliest offset was found to be more than the current offset");
 					log.error("Moving to the earliest offset available");
+					adjustNonfeasibleRequest(request,offsetKeys);
 				}
-				else
-				{
-					log.error("The current offset was found to be more than the latest offset");
-					log.error("Moving to the earliest offset available");
-				}
-				request.setOffset(request.getEarliestOffset());
-				offsetKeys.put(
-						request,
-						new EtlKey(request.getTopic(), request.getLeaderId(),
-								request.getPartition(), 0, request
-										.getLastOffset()));
+			}
+			
+			if(request.getOffset() > request.getLastOffset()){
+				log.error("The current offset was found to be more than the latest offset");
+				log.error("Moving to the earliest offset available");
+				adjustNonfeasibleRequest(request,offsetKeys);
 			}
 			log.info(request);
 		}
 
 		writePrevious(offsetKeys.values(), context);
-
 		CamusJob.stopTiming("getSplits");
 		CamusJob.startTiming("hadoop");
 		CamusJob.setTime("hadoop_start");
 		return allocateWork(finalRequests, context);
 	}
 
+	private void adjustNonfeasibleRequest(EtlRequest request, Map<EtlRequest, EtlKey> offsetKeys){
+		request.setOffset(request.getEarliestOffset());
+		offsetKeys.put(	request, 
+			  		new EtlKey( request.getTopic(), request.getLeaderId(),
+			  					request.getPartition(), 0, request.getLastOffset()));
+	}
 	private Set<String> getMoveToLatestTopicsSet(JobContext context) {
 		Set<String> topics = new HashSet<String>();
 
