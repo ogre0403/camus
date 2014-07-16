@@ -648,7 +648,7 @@ public class CamusJob extends Configured implements Tool {
 
 	public static int getKafkaBufferSize(JobContext job) {
 		return job.getConfiguration().getInt(KAFKA_FETCH_BUFFER_SIZE,
-				1024 * 1024);
+				1024 * 1024 * 1024);
 	}
 
 	public static boolean getLog4jConfigure(JobContext job) {
