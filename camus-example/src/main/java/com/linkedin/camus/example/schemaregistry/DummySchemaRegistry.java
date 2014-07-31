@@ -1,11 +1,10 @@
 package com.linkedin.camus.example.schemaregistry;
 
-import org.apache.avro.Schema;
-import org.apache.hadoop.conf.Configuration;
+import com.linkedin.camus.example.records.DummyLog3;
 
-import com.linkedin.camus.example.records.DummyLog;
-import com.linkedin.camus.example.records.DummyLog2;
 import com.linkedin.camus.schemaregistry.AvroMemorySchemaRegistry;
+
+import java.nio.ByteBuffer;
 
 /**
  * This is a little dummy registry that just uses a memory-backed schema
@@ -13,10 +12,11 @@ import com.linkedin.camus.schemaregistry.AvroMemorySchemaRegistry;
  * camus.properties
  */
 public class DummySchemaRegistry extends AvroMemorySchemaRegistry {
-	public DummySchemaRegistry(Configuration conf) {
+//	public DummySchemaRegistry(Configuration conf) {
+	public DummySchemaRegistry() {
 		super();
-		super.register("DUMMY_LOG", DummyLog.newBuilder().build().getSchema());
-		super.register("DUMMY_LOG_2", DummyLog2.newBuilder().build()
-				.getSchema());
+        super.register("DUMMY_LOG_3", DummyLog3.newBuilder()
+                                        .setFilename("")
+                                        .setRaw(ByteBuffer.wrap(new byte[0])).build().getSchema());
 	}
 }
